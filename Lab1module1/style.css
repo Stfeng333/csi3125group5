@@ -1,6 +1,6 @@
 /*let's make the style of out page lunar themed*/
 :root {
-  --moon-bg: #0f172a;
+  --moon-bg: rgb(15, 23, 42);
   --moon-surface: #1e293b;
   --moon-light: #64748b;
   --moon-glow: #94a3b8;
@@ -20,6 +20,18 @@ body {
   background-color: var(--moon-bg);
   color: var(--moon-text);
   line-height: 1.6;
+
+  /* optional addition: pretty background */
+  background-image: 
+    linear-gradient(
+      rgba(15, 23, 42, 0.8), 
+      rgba(15, 23, 42, 0.8)
+    ),  
+    url(images/background.jpg);
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 h1 {
