@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Go5 - Online Grocery Store</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- our title and navigation bar will be in the header -->
+    <header>
+        <div class="header-container">
+            <h1 class="store-name">Go5 Grocery Store</h1>
+            <nav>
+                <button id="nav-customer" class="nav-btn active">Customer Info</button>
+                <button id="nav-products" class="nav-btn">Products</button>
+                <button id="nav-cart" class="nav-btn">Cart <span id="cart-count">(0)</span></button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- main content -->
+    <main>
+        <!-- customer page -->
+        <section id="customer-section" class="page-section active">
+            <div class="container">
+                <h2>Welcome to Go5!</h2>
+                <p class="section-description">Please tell us about your dietary preferences so we can personalize your shopping experience.</p>
+                
+                <div class="customer-form">
+                    <div class="form-group">
+                        <h3>Dietary Restrictions</h3>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="vegetarian" name="dietary">
+                                <span>I am vegetarian (no meat or fish)</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="gluten-free" name="dietary">
+                                <span>I have gluten intolerance (no wheat products)</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <h3>Product Preferences</h3>
+                        <div class="radio-group">
+                            <label class="radio-label">
+                                <input type="radio" id="organic" name="preference" value="organic">
+                                <span>I prefer organic products</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" id="non-organic" name="preference" value="non-organic">
+                                <span>I prefer non-organic products</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" id="no-preference" name="preference" value="all" checked>
+                                <span>No preference</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <h3>Accessibility Options</h3>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="large-text">
+                                <span>Enable larger text (for better readability)</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <button id="save-preferences" class="btn-primary">Save Preferences</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- we will put the signature here, Sahara knows what to write on it -->
+    <footer>
+        <p></p>
+    </footer>
+
+    <script src="scripts.js"></script>
+</body>
+</html>
