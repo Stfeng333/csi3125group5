@@ -11,6 +11,10 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeNavigation();
     initializeCustomerPage();
     loadPreferences();
+
+    initializeProductsPage();
+    loadCart();
+    updateCartCount();
 });
 
 // our navigation system
@@ -104,4 +108,293 @@ function loadPreferences() {
             document.body.classList.add('large-text');
         }
     }
+}
+// our products and cart data
+let products = [
+  {
+    id: 1,
+    name: "Banana",
+    category: "fruit",
+    price: 0.50,
+    image: "imagess/banana1.png",
+    organic: false,
+    glutenFree: true,
+    vegetarian: true
+  },
+  {
+    id: 2,
+    name: "Spinach",
+    category: "vegetable",
+    price: 1.25,
+    image: "imagess/spinach1.png",
+    organic: true,
+    glutenFree: true,
+    vegetarian: true
+  },
+  {
+    id: 3,
+    name: "White Bread",
+    category: "bakery",
+    price: 1.25,
+    image: "imagess/whitebread1.png",
+    organic: false,
+    glutenFree: false,
+    vegetarian: true
+  },
+  {
+    id: 4,
+    name: "Pasta (Wheat)",
+    category: "pantry",
+    price: 2.75,
+    image: "imagess/pasta1.png",
+    organic: false,
+    glutenFree: false,
+    vegetarian: true
+  },
+  {
+    id: 5,
+    name: "Canned Beans",
+    category: "pantry",
+    price: 3.00,
+    image: "imagess/cannedbeans1.png",
+    organic: false,
+    glutenFree: true,
+    vegetarian: true
+  },
+  {
+    id: 6,
+    name: "Tofu",
+    category: "protein",
+    price: 3.50,
+    image: "imagess/tofu1.png",
+    organic: true,
+    glutenFree: true,
+    vegetarian: true
+  },
+  {
+    id: 7,
+    name: "Greek Yogurt",
+    category: "dairy",
+    price: 4.00,
+    image: "imagess/greekyogurt1.png",
+    organic: false,
+    glutenFree: true,
+    vegetarian: false
+  },
+  {
+    id: 8,
+    name: "Milk",
+    category: "dairy",
+    price: 4.50,
+    image: "imagess/milk1.png",
+    organic: false,
+    glutenFree: true,
+    vegetarian: true
+  },
+  {
+    id: 9,
+    name: "Free-Range Eggs",
+    category: "dairy",
+    price: 5.00,
+    image: "imagess/eggs1.png",
+    organic: true,
+    glutenFree: true,
+    vegetarian: true
+  },
+  {
+    id: 10,
+    name: "Quinoa",
+    category: "grain",
+    price: 5.50,
+    image: "imagess/quinoa1.png",
+    organic: true,
+    glutenFree: true,
+    vegetarian: true
+  },
+  {
+    id: 11,
+    name: "Cheddar Cheese",
+    category: "dairy",
+    price: 6.00,
+    image: "imagess/cheddarcheese1.png",
+    organic: false,
+    glutenFree: true,
+    vegetarian: true
+  },
+  {
+    id: 12,
+    name: "Chicken Thighs",
+    category: "meat",
+    price: 7.50,
+    image: "imagess/chickenthighs1.png",
+    organic: false,
+    glutenFree: true,
+    vegetarian: false
+  },
+  {
+    id: 13,
+    name: "Almond Butter",
+    category: "pantry",
+    price: 8.00,
+    image: "imagess/almondbutter1.png",
+    organic: true,
+    glutenFree: true,
+    vegetarian: true
+  },
+  {
+    id: 14,
+    name: "Ground Beef",
+    category: "meat",
+    price: 9.00,
+    image: "imagess/groundbeef1.png",
+    organic: false,
+    glutenFree: true,
+    vegetarian: false
+  },
+  {
+    id: 15,
+    name: "Frozen Pizza",
+    category: "frozen",
+    price: 10.00,
+    image: "imagess/frozenpizza1.png",
+    organic: false,
+    glutenFree: false,
+    vegetarian: true
+  },
+  {
+    id: 16,
+    name: "Chicken Breast",
+    category: "meat",
+    price: 11.50,
+    image: "imagess/chickenbreast1.png",
+    organic: true,
+    glutenFree: true,
+    vegetarian: false
+  },
+  {
+    id: 17,
+    name: "Atlantic Salmon",
+    category: "seafood",
+    price: 13.00,
+    image: "imagess/salmon1.png",
+    organic: false,
+    glutenFree: true,
+    vegetarian: false
+  },{
+    id: 18,
+    name: "Honey",
+    category: "pantry",
+    price: 14.00,
+    image: "imagess/honey1.png",
+    organic: true,
+    glutenFree: true,
+    vegetarian: true
+  },
+  {
+    id: 19,
+    name: "Ribeye Steak",
+    category: "meat",
+    price: 18.00,
+    image: "imagess/steak1.png",
+    organic: false,
+    glutenFree: true,
+    vegetarian: false
+  },
+  {
+    id: 20,
+    name: "Olive Oil",
+    category: "pantry",
+    price: 22.00,
+    image: "imagess/oliveoil1.png",
+    organic: true,
+    glutenFree: true,
+    vegetarian: true
+  }
+
+
+];
+
+let cart = []; // { productId, qty }
+
+// our product page
+function initializeProductsPage() {
+  const grid = document.getElementById("products-grid");
+  if (!grid) return; 
+
+  const searchInput = document.getElementById("product-search");
+  const categoryFilter = document.getElementById("category-filter");
+  const resetBtn = document.getElementById("reset-filters");
+
+  // initial render
+  renderProducts();
+
+  searchInput.addEventListener("input", renderProducts);
+  categoryFilter.addEventListener("change", renderProducts);
+  resetBtn.addEventListener("click", () => {
+    searchInput.value = "";
+    categoryFilter.value = "all";
+    renderProducts();
+  });
+}
+
+function renderProducts() {
+  const grid = document.getElementById("products-grid");
+  if (!grid) return;
+
+  const searchText = (document.getElementById("product-search")?.value || "").toLowerCase().trim();
+  const category = document.getElementById("category-filter")?.value || "all";
+
+  let filtered = products.filter(p => {
+    // category filter
+    if (category !== "all" && p.category !== category) return false;
+
+    // search filter
+    if (searchText && !p.name.toLowerCase().includes(searchText)) return false;
+
+    // preference filters (from Customer Info page)
+    if (userPreferences.vegetarian && !p.vegetarian) return false;
+    if (userPreferences.glutenFree && !p.glutenFree) return false;
+    if (userPreferences.organicPreference === "organic" && !p.organic) return false;
+    if (userPreferences.organicPreference === "non-organic" && p.organic) return false;
+
+    return true;
+  });
+
+  // render cards
+  filtered.sort((a,b) => a.price - b.price);
+
+  grid.innerHTML = filtered.map(productCardHTML).join("");
+
+  // add-to-cart buttons
+  filtered.forEach(p => {
+    const btn = document.getElementById(`add-${p.id}`);
+    if (btn) btn.addEventListener("click", () => addToCart(p.id));
+  });
+
+  // empty state
+  if (filtered.length === 0) {
+    grid.innerHTML = `<p style="text-align:center; color: var(--text-light); grid-column: 1 / -1;">
+      No products match your filters.
+    </p>`;
+  }
+}
+
+function productCardHTML(p) {
+  const organicBadge = p.organic ? `<span class="badge organic">Organic</span>` : `<span class="badge">Non-organic</span>`;
+  const gfBadge = p.glutenFree ? `<span class="badge gf">Gluten-free</span>` : `<span class="badge">Contains gluten</span>`;
+
+  return `
+    <div class="product-card">
+      <img class="product-image" src="${p.image}" alt="${p.name}">
+      <div class="product-body">
+        <div class="product-name">${p.name}</div>
+
+        <div class="product-meta">
+          <div>${organicBadge} ${gfBadge}</div>
+          <div class="product-price">$${p.price.toFixed(2)}</div>
+        </div>
+
+        <button class="btn-add-cart" id="add-${p.id}" type="button">Add to cart</button>
+      </div>
+    </div> `;
 }
