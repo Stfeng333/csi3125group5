@@ -74,6 +74,36 @@
                 </div>
             </div>
         </section>
+        <!--products page-->
+        <section id="products-section" class="page-section">
+            <div class="container">
+                <h2>Products</h2>
+                <p class="section-description"> Browse items matched to your preferences.</p>
+
+                <!--filters / Search -->
+                <div class="products-toolbar">
+                    <input id="product-search" class="search-input" type="text" placeholder="Search products"/>
+                    <select id="category-filter" class="select-input">
+                        <option value="all">All categories</option>
+                        <option value="fruit">Fruit</option>
+                        <option value="vegetable">Vegetable</option>
+                        <option value="dairy">Dairy</option>
+                        <option value="pantry">Pantry</option>
+                        <option value="bakery">Bakery</option>
+                        <option value="meat">Meat</option>
+                        <option value="frozen">Frozen</option>
+                        <option value="protein">Protein</option>
+                        <option value="grain">Grain</option>
+                        <option value="seafood">Seafood</option>
+                    </select>
+                    <button id="reset-filters" class="btn-secondary" type="button">Reset</button>
+                </div>
+
+                <!--products grid-->
+                <div id="products-grid" class="products-grid">
+                </div>
+            </div>
+        </section>                  
     </main>
 
     <!-- we will put the signature here, Sahara knows what to write on it -->
