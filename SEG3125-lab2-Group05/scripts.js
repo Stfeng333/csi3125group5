@@ -15,6 +15,17 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeProductsPage();
     loadCart();
     updateCartCount();
+    renderCart();
+
+    const clearBtn = document.getElementById("clear-cart");
+    if (clearBtn) {
+        clearBtn.addEventListener("click", () => {
+      cart = [];
+      saveCart();
+      updateCartCount();
+      renderCart();
+    });
+  }
 });
 
 // our navigation system
@@ -397,4 +408,116 @@ function productCardHTML(p) {
         <button class="btn-add-cart" id="add-${p.id}" type="button">Add to cart</button>
       </div>
     </div> `;
+}
+function addToCart(productId) {
+  const item = cart.find(x => x.productId === productId);
+  if (item) item.qty += 1;
+  else cart.push({ productId, qty: 1 });
+
+  updateCartUI();
+}
+
+function updateCartCount() {
+  const count = getCartCount();
+  const el = document.getElementById("cart-count");
+  if (el) el.textContent = `(${count})`;
+}
+
+function saveCart() {
+  localStorage.setItem("go5Cart", JSON.stringify(cart));
+}
+
+function loadCart() {
+  const saved = localStorage.getItem("go5Cart");
+  cart = saved ? JSON.parse(saved) : [];
+}
+
+function renderCart() {
+  const cartContent = document.getElementById("cart-content");
+  const cartTotalEl = document.getElementById("cart-total");
+  if (!cartContent || !cartTotalEl) return;
+
+  if (cart.length === 0) {
+    cartContent.innerHTML = `<p style="text-align:center; color: var(--text-light);">Your cart is empty.</p>`;
+    cartTotalEl.textContent = "$0.00";
+    return;
+  }
+
+  let total = 0;
+
+  cartContent.innerHTML = cart.map(item => {
+    const p = products.find(prod => prod.id === item.productId);
+    if (!p) return "";
+
+    const lineTotal = p.price * item.qty;
+    total += lineTotal;
+
+    return `
+      <div class="cart-item">
+        <img src="${p.image}" alt="${p.name}">
+        <div>
+          <div class="cart-item-title">${p.name}</div>
+          <div class="cart-item-sub">
+            $${p.price.toFixed(2)} each - Total: $${lineTotal.toFixed(2)}
+          </div>
+        </div>
+
+        <div class="cart-controls">
+          <div class="qty-controls">
+            <button class="qty-btn" data-action="dec" data-id="${p.id}" type="button">−</button>
+
+            <div class="qty-center">
+              <span class="qty-value">${item.qty}</span>
+              <button class="remove-btn" data-action="remove" data-id="${p.id}" type="button">Remove</button>
+            </div>
+
+            <button class="qty-btn" data-action="inc" data-id="${p.id}" type="button">+</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  cartTotalEl.textContent = `$${total.toFixed(2)}`;
+
+  // hook buttons
+  cartContent.querySelectorAll("[data-action]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const action = btn.dataset.action;
+      const id = Number(btn.dataset.id);
+
+      if (action === "inc") changeQty(id, +1);
+      if (action === "dec") changeQty(id, -1);
+      if (action === "remove") removeFromCart(id);
+    });
+  });
+}
+
+function changeQty(productId, delta) {
+  const item = cart.find(x => x.productId === productId);
+  if (!item) return;
+
+  item.qty += delta;
+
+  if (item.qty <= 0) {
+    cart = cart.filter(x => x.productId !== productId);
+  }
+
+  updateCartUI();
+}
+
+function removeFromCart(productId) {
+  cart = cart.filter(x => x.productId !== productId);
+  updateCartUI();
+}
+
+// Helper functions
+function getCartCount() {
+  return cart.reduce((sum, item) => sum + item.qty, 0);
+}
+
+function updateCartUI() {
+  saveCart();
+  updateCartCount();
+  renderCart();
 }
